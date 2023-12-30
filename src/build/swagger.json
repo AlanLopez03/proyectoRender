@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "54.91.53.133",
+    "host": "joyeria.onrender.com",
     "basePath": "",
     "tags": [
         {
@@ -61,7 +61,7 @@
         }
     ],
     "schemes": [
-        "http"
+        "https"
     ],
     "consumes": [
         "application/json"
