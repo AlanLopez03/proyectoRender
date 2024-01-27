@@ -3,6 +3,22 @@ import pool from '../database';
 
 class UsuariosController
 {
+
+    public async login(req: Request, res: Response ): Promise<void>
+    {
+        const {correo, password} = req.params;
+        console.log(correo);
+        console.log(password);
+        const respuesta = await pool.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?',[correo,password]);
+        if(respuesta.length>0)
+        {
+            res.json(true);
+            return ;
+        }
+        res.json(false);
+        //res.status(404).json({'mensaje': 'Usuario no encontrado'});
+    }
+    
     public async list(req: Request, res: Response ): Promise<void>
     {
         const respuesta = await pool.query('SELECT * FROM usuarios');
