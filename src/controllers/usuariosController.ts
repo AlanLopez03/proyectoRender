@@ -21,7 +21,7 @@ class UsuariosController
     
     public async list(req: Request, res: Response ): Promise<void>
     {
-        const respuesta = await pool.query('SELECT * FROM usuarios');
+        const respuesta = await pool.query('SELECT idProducto,nombre,descripcion,stock,precio,descuento,DATE_FORMAT(inicio_descuento, "%d-%m-%Y"),DATE_FORMAT(fin_descuento, "%d-%m-%Y"),idMaterial,idCategoria,idMarca FROM producto');
         res.json( respuesta );
     }
 

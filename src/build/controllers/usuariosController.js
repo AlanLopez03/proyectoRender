@@ -31,7 +31,7 @@ class UsuariosController {
     }
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respuesta = yield database_1.default.query('SELECT * FROM usuarios');
+            const respuesta = yield database_1.default.query('SELECT idProducto,nombre,descripcion,stock,precio,descuento,DATE_FORMAT(inicio_descuento, "%d-%m-%Y"),DATE_FORMAT(fin_descuento, "%d-%m-%Y"),idMaterial,idCategoria,idMarca FROM producto');
             res.json(respuesta);
         });
     }
