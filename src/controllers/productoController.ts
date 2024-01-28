@@ -7,7 +7,7 @@ class ProductoController
     {
         try{
         //const respuesta = await pool.query('SELECT * FROM producto');
-        const respuesta = await pool.query('SELECT idProducto, nombre, descripcion,stock,precio,descuento,inicio_descuento,fin_descuento,idMaterial,idCategoria,idMarca  FROM producto');
+        const respuesta = await pool.query('SELECT idProducto, nombre, descripcion,stock,precio,descuento,DATE(inicio_descuento),Date(fin_descuento),idMaterial,idCategoria,idMarca  FROM producto');
         res.json( respuesta );
         }
         catch{
