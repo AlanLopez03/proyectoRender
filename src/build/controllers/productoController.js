@@ -18,7 +18,8 @@ class ProductoController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const respuesta = yield database_1.default.query('SELECT * FROM producto');
+                //const respuesta = await pool.query('SELECT * FROM producto');
+                const respuesta = yield database_1.default.query('SELECT idProducto, nombre, descripcion,stock,precio,descuento,inicio_descuento,fin_descuento,idMaterial,idCategoria,idMarca  FROM producto');
                 res.json(respuesta);
             }
             catch (_a) {
