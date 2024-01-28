@@ -17,8 +17,13 @@ const database_1 = __importDefault(require("../database"));
 class ProductoController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respuesta = yield database_1.default.query('SELECT * FROM producto');
-            res.json(respuesta);
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM producto');
+                res.json(respuesta);
+            }
+            catch (_a) {
+                res.json(false);
+            }
         });
     }
     listOne(req, res) {
@@ -34,8 +39,13 @@ class ProductoController {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const resp = yield database_1.default.query("INSERT INTO producto set ?", [req.body]);
-            res.json(resp);
+            try {
+                const resp = yield database_1.default.query("INSERT INTO producto set ?", [req.body]);
+                res.json(resp);
+            }
+            catch (_a) {
+                res.json(false);
+            }
         });
     }
     update(req, res) {

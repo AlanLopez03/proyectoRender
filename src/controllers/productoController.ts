@@ -5,8 +5,13 @@ class ProductoController
 {
     public async list(req: Request, res: Response ): Promise<void>
     {
+        try{
         const respuesta = await pool.query('SELECT * FROM producto');
         res.json( respuesta );
+        }
+        catch{
+            res.json(false);
+        }
     }
     public async listOne(req: Request, res: Response): Promise <void>
     {
@@ -22,8 +27,13 @@ class ProductoController
 
     public async create(req: Request, res: Response): Promise<void> 
     {
+        try{
         const resp = await pool.query("INSERT INTO producto set ?",[req.body]);
         res.json(resp);
+        }
+        catch{
+            res.json(false);
+        }
     }
 
     public async update(req: Request, res: Response): Promise<void>

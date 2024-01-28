@@ -15,6 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuariosController = void 0;
 const database_1 = __importDefault(require("../database"));
 class UsuariosController {
+    login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { correo, password } = req.params;
+            console.log(correo);
+            console.log(password);
+            const respuesta = yield database_1.default.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?', [correo, password]);
+            if (respuesta.length > 0) {
+                res.json(true);
+                return;
+            }
+            res.json(false);
+            //res.status(404).json({'mensaje': 'Usuario no encontrado'});
+        });
+    }
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const respuesta = yield database_1.default.query('SELECT * FROM usuarios');
