@@ -35,7 +35,7 @@ class ProductoController {
                 res.json(respuesta[0]);
                 return;
             }
-            res.status(404).json({ 'mensaje': 'Producto no encontrado' });
+            res.json(false);
         });
     }
     create(req, res) {
