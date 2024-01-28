@@ -12,7 +12,7 @@ class UsuariosController
         const respuesta = await pool.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?',[correo,password]);
         if(respuesta.length>0)
         {
-            res.json(true);
+            res.json(respuesta[0]);
             return ;
         }
         res.json(false);
