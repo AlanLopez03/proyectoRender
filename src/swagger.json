@@ -2496,12 +2496,12 @@
                     ,"default": 0
                 },
                 "inicio_descuento":{
-                    "type": "date",
+                    "type": "string",
                     "descripcion": "Fecha de inicio del descuento"
                     ,"default": "2023-12-11"
                 },
                 "fin_descuento":{
-                    "type": "date",
+                    "type": "string",
                     "descripcion": "Fecha de fin del descuento"
                     ,"default": "2023-12-11"
 
