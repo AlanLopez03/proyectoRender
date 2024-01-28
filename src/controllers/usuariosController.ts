@@ -21,8 +21,13 @@ class UsuariosController
     
     public async list(req: Request, res: Response ): Promise<void>
     {
-        const respuesta = await pool.query('SELECT idProducto,nombre,descripcion,stock,precio,descuento,DATE_FORMAT(inicio_descuento, "%d-%m-%Y"),DATE_FORMAT(fin_descuento, "%d-%m-%Y"),idMaterial,idCategoria,idMarca FROM producto');
-        res.json( respuesta );
+        try
+        {const respuesta = await pool.query('SELECT * from usuarios');
+        res.json( respuesta );}
+        catch
+        {
+            res.json(false);
+        }
     }
 
     public async listOne(req: Request, res: Response): Promise <void>
@@ -33,7 +38,7 @@ class UsuariosController
     res.json(respuesta[0]);
     return ;
     }
-    res.status(404).json({'mensaje': 'Usuario no encontrado'});
+    res.json(false);
     }
 
     public async create(req: Request, res: Response): Promise<void> {

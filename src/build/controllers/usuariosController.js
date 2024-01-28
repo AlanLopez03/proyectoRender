@@ -31,8 +31,13 @@ class UsuariosController {
     }
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respuesta = yield database_1.default.query('SELECT idProducto,nombre,descripcion,stock,precio,descuento,DATE_FORMAT(inicio_descuento, "%d-%m-%Y"),DATE_FORMAT(fin_descuento, "%d-%m-%Y"),idMaterial,idCategoria,idMarca FROM producto');
-            res.json(respuesta);
+            try {
+                const respuesta = yield database_1.default.query('SELECT * from usuarios');
+                res.json(respuesta);
+            }
+            catch (_a) {
+                res.json(false);
+            }
         });
     }
     listOne(req, res) {
@@ -43,7 +48,7 @@ class UsuariosController {
                 res.json(respuesta[0]);
                 return;
             }
-            res.status(404).json({ 'mensaje': 'Usuario no encontrado' });
+            res.json(false);
         });
     }
     create(req, res) {
