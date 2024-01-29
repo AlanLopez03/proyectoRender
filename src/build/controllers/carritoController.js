@@ -23,36 +23,44 @@ class CarritoController {
             console.log(idCliente);
             console.log(idProducto);
             console.log(cantidad);
-            const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
-            console.log(buscar.length);
-            if (buscar.length > 0) {
-                const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
-                const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ?", [cantidad, idCliente]);
-                res.json(respuesta);
-                return;
+            try {
+                const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
+                console.log(buscar.length);
+                if (buscar.length > 0) {
+                    const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ?", [cantidad, idCliente]);
+                    res.json(respuesta);
+                    return;
+                }
+                else {
+                    const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
+                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-ca.cantidad WHERE ca.idCliente = ?", [idCliente]);
+                    res.json(respuesta);
+                    return;
+                }
             }
-            else {
-                const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
-                const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-ca.cantidad WHERE ca.idCliente = ?", [idCliente]);
-                res.json(respuesta);
-                return;
+            catch (_a) {
+                res.json(false);
             }
         });
     }
     verCarrito(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            console.log(id);
-            const respuesta = yield database_1.default.query("SELECT pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
-            if (respuesta.length > 0) {
-                const carritoConSubtotales = respuesta.map((item) => {
-                    const subtotal = item.cantidad * item.precio * item.descuento;
-                    return Object.assign(Object.assign({}, item), { subtotal });
-                });
-                res.json(carritoConSubtotales);
+            try {
+                const respuesta = yield database_1.default.query("SELECT pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
+                if (respuesta.length > 0) {
+                    const carritoConSubtotales = respuesta.map((item) => {
+                        const subtotal = item.cantidad * item.precio * item.descuento;
+                        return Object.assign(Object.assign({}, item), { subtotal });
+                    });
+                    res.json(carritoConSubtotales);
+                }
+                else
+                    res.json(false);
             }
-            else {
-                res.status(404).json({ 'mensaje': 'Carrito no encontrado' });
+            catch (_a) {
+                res.json(false);
             }
         });
     }

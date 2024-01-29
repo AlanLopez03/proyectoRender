@@ -10,7 +10,9 @@ class CarritoController{
         console.log(idCliente);
         console.log(idProducto);
         console.log(cantidad);
-        const buscar= await pool.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?',[idProducto,idCliente]);
+        try
+
+{        const buscar= await pool.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?',[idProducto,idCliente]);
         console.log(buscar.length);
         if(buscar.length>0)
         {
@@ -27,14 +29,19 @@ class CarritoController{
             const inventario= await pool.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-ca.cantidad WHERE ca.idCliente = ?", [idCliente]);
             res.json(respuesta);
             return;
+        }}
+        catch
+        {
+            res.json(false);
         }
     }
 
     public async verCarrito(req: Request, res: Response): Promise <void>{
         const {id} = req.params;
-        console.log(id);
-        const respuesta = await pool.query("SELECT pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
-        if (respuesta.length > 0) {
+        try
+        {const respuesta = await pool.query("SELECT pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
+        if (respuesta.length > 0) 
+        {
             const carritoConSubtotales = respuesta.map((item: any) => {
                 const subtotal = item.cantidad * item.precio*item.descuento;
                 return { ...item, subtotal };  
@@ -42,9 +49,14 @@ class CarritoController{
     
             res.json(carritoConSubtotales);
            
-        } else {
-            res.status(404).json({ 'mensaje': 'Carrito no encontrado' });
+        } 
+        else 
+            res.json(false);}
+        catch
+        {
+            res.json(false);
         }
+        
 
     }
 
