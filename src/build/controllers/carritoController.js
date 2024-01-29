@@ -17,7 +17,7 @@ const database_1 = __importDefault(require("../database"));
 class CarritoController {
     buscar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombreProducto } = req.params;
+            const { nombreProducto } = req.body;
             try {
                 //Se supone recibe el nombre del producto y busca en la base de datos si existe
                 const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE nombre = ?', [nombreProducto]);
@@ -65,7 +65,7 @@ class CarritoController {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                const respuesta = yield database_1.default.query("SELECT pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
+                const respuesta = yield database_1.default.query("SELECT pro.idProducto,pro.nombre,ca.cantidad,pro.precio,pro.stock,pro.descuento FROM carrito ca join producto pro on pro.idProducto=ca.idProducto   WHERE ca.idCliente = ?", [id]);
                 if (respuesta.length > 0) {
                     const carritoConSubtotales = respuesta.map((item) => {
                         const subtotal = item.cantidad * item.precio * item.descuento;
