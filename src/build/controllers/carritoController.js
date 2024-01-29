@@ -15,6 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.carritoController = void 0;
 const database_1 = __importDefault(require("../database"));
 class CarritoController {
+    buscar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombreProducto } = req.params;
+            try {
+                //Se supone recibe el nombre del producto y busca en la base de datos si existe
+                const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE nombre = ?', [nombreProducto]);
+                if (respuesta.length > 0) {
+                    res.json(respuesta[0]);
+                    return;
+                }
+                res.json(false);
+            }
+            catch (_a) {
+                res.json(false);
+            }
+        });
+    }
     insertarProducto(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { idProducto } = req.body;
