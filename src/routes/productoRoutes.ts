@@ -15,7 +15,7 @@ class ProductoRoutes{
         this.router.get('/:id', productoController.listOne );
         this.router.put('/aplicarDescuento/:id', productoController.aplicarDescuento );
         this.router.get('/filtrarProductos/:id', productoController.filtrarProductos );
-        
+        this.router.post('/buscarNombre', productoController.buscarporNombre );
         }
 }
 const productoRoutes= new ProductoRoutes();

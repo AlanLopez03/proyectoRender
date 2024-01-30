@@ -40,26 +40,21 @@ class CarritoController {
             console.log(idCliente);
             console.log(idProducto);
             console.log(cantidad);
-            try { //const stock= await pool.query('SELECT stock FROM producto WHERE idProducto = ?',[idProducto]);
-                const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
-                //console.log(buscar.length);
-                if (buscar.length > 0) {
-                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
-                    const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
-                    if (respuesta.affectedRows > 0)
-                        res.json(respuesta);
-                    else
-                        res.json(false);
-                }
-                else {
-                    const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
-                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-ca.cantidad WHERE ca.idCliente = ?", [idCliente]);
+            const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
+            if (buscar.length > 0) {
+                const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
+                const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                if (respuesta.affectedRows > 0)
                     res.json(respuesta);
-                    return;
-                }
+                else
+                    res.json(false);
+                return;
             }
-            catch (_a) {
-                res.json(false);
+            else {
+                const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
+                const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-ca.cantidad WHERE ca.idCliente = ?", [idCliente]);
+                res.json(respuesta);
+                return;
             }
         });
     }
