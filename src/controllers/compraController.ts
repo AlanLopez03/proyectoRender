@@ -41,7 +41,6 @@ public async crearCompra(req: Request, res: Response): Promise<void>
     console.log(fecha);
     console.log(idEdo);
     const productosVendidos = await pool.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?",[id]);
-
     const busca = await pool.query("SELECT SUM(ca.cantidad * pro.precio * (pro.descuento)) AS total FROM carrito ca JOIN producto pro ON pro.idProducto = ca.idProducto WHERE ca.idCliente = ?",[id]);
     const total =busca[0].total;
     console.log(total);
@@ -58,8 +57,8 @@ public async crearCompra(req: Request, res: Response): Promise<void>
     const limpiaCarrito = await  pool.query("DELETE FROM carrito WHERE idCliente = ?",[id]);
     res.json(respuesta);
 }
-    catch{
-        res.json(false);
+    catch(e){
+        res.json(e);
      } 
    
 }

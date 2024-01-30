@@ -71,7 +71,7 @@ class CarritoController{
     }
 
     public async limpiarCarrito(req: Request, res: Response): Promise<void>
-    {
+    {//Debe agregar lo que se elimino a la tabla de productos
         const {id} = req.params;
         const respuesta = await pool.query('DELETE FROM carrito WHERE idCliente = ?', [id]);
     

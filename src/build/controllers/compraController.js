@@ -70,8 +70,8 @@ class CompraController {
                 const limpiaCarrito = yield database_1.default.query("DELETE FROM carrito WHERE idCliente = ?", [id]);
                 res.json(respuesta);
             }
-            catch (_a) {
-                res.json(false);
+            catch (e) {
+                res.json(e);
             }
         });
     }
