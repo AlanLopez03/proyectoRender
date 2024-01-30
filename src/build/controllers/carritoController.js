@@ -48,11 +48,13 @@ class CarritoController {
                     try {
                         const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
                         const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                        res.json(respuesta);
+                        return;
                     }
                     catch (_a) {
                         res.json(false);
+                        return;
                     }
-                    return;
                 }
                 else {
                     const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
