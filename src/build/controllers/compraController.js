@@ -46,28 +46,33 @@ class CompraController {
     //}
     crearCompra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { fecha } = req.body;
-            const { idEdo } = req.body;
-            console.log(id);
-            console.log(fecha);
-            console.log(idEdo);
-            const productosVendidos = yield database_1.default.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?", [id]);
-            const busca = yield database_1.default.query("SELECT SUM(ca.cantidad * pro.precio * (pro.descuento)) AS total FROM carrito ca JOIN producto pro ON pro.idProducto = ca.idProducto WHERE ca.idCliente = ?", [id]);
-            const total = busca[0].total;
-            console.log(total);
-            const compraData = {
-                fecha: req.body.fecha,
-                monto: total,
-                idEdo: req.body.idEdo,
-                idCliente: id
-            };
-            const respuesta = yield database_1.default.query("INSERT INTO compra set ? ", [compraData]);
-            for (const producto of productosVendidos) {
-                yield database_1.default.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?", [producto.cantidad, producto.idProducto]);
+            try {
+                const { id } = req.params;
+                const { fecha } = req.body;
+                const { idEdo } = req.body;
+                console.log(id);
+                console.log(fecha);
+                console.log(idEdo);
+                const productosVendidos = yield database_1.default.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?", [id]);
+                const busca = yield database_1.default.query("SELECT SUM(ca.cantidad * pro.precio * (pro.descuento)) AS total FROM carrito ca JOIN producto pro ON pro.idProducto = ca.idProducto WHERE ca.idCliente = ?", [id]);
+                const total = busca[0].total;
+                console.log(total);
+                const compraData = {
+                    fecha: req.body.fecha,
+                    monto: total,
+                    idEdo: req.body.idEdo,
+                    idCliente: id
+                };
+                const respuesta = yield database_1.default.query("INSERT INTO compra set ? ", [compraData]);
+                for (const producto of productosVendidos) {
+                    yield database_1.default.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?", [producto.cantidad, producto.idProducto]);
+                }
+                const limpiaCarrito = yield database_1.default.query("DELETE FROM carrito WHERE idCliente = ?", [id]);
+                res.json(respuesta);
             }
-            const limpiaCarrito = yield database_1.default.query("DELETE FROM carrito WHERE idCliente = ?", [id]);
-            res.json(respuesta);
+            catch (_a) {
+                res.json(false);
+            }
         });
     }
     list(req, res) {
