@@ -56,7 +56,8 @@ public async crearCompra(req: Request, res: Response): Promise<void>
             await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);}
             
     const limpiaCarrito = await  pool.query("DELETE FROM carrito WHERE idCliente = ?",[id]);
-    res.json(respuesta);}
+    res.json(respuesta);
+}
     catch{
         res.json(false);
      } 
