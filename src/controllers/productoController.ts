@@ -76,6 +76,15 @@ class ProductoController
         const resp= await pool.query('SELECT * FROM producto');
         res.json(resp);
     }
+    public async buscarporNombre(req: Request, res: Response): Promise <void>{
+        const {nombre} = req.body;//Parece que si jala Agregar al swagger
+        const respuesta = await pool.query('SELECT * FROM producto WHERE nombre LIKE ?', [`%${nombre}%`]);
+        if(respuesta.length>0){
+        res.json(respuesta);
+        return ;
+        }
+        res.json(false);
+    }
 
 
 }

@@ -92,5 +92,16 @@ class ProductoController {
             res.json(resp);
         });
     }
+    buscarporNombre(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.body; //Parece que si jala Agregar al swagger
+            const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE nombre LIKE ?', [`%${nombre}%`]);
+            if (respuesta.length > 0) {
+                res.json(respuesta);
+                return;
+            }
+            res.json(false);
+        });
+    }
 }
 exports.productoController = new ProductoController();

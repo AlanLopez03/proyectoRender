@@ -40,21 +40,16 @@ class CarritoController {
             console.log(idCliente);
             console.log(idProducto);
             console.log(cantidad);
-            try {
-                const stock = yield database_1.default.query('SELECT stock FROM producto WHERE idProducto = ?', [idProducto]);
+            try { //const stock= await pool.query('SELECT stock FROM producto WHERE idProducto = ?',[idProducto]);
                 const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
                 //console.log(buscar.length);
-                if (buscar.length > 0 && stock[0].stock >= cantidad) {
-                    try {
-                        const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
-                        const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                if (buscar.length > 0) {
+                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
+                    const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                    if (respuesta.affectedRows > 0)
                         res.json(respuesta);
-                        return;
-                    }
-                    catch (_a) {
+                    else
                         res.json(false);
-                        return;
-                    }
                 }
                 else {
                     const respuesta = yield database_1.default.query('INSERT INTO carrito (idProducto,idCliente,cantidad) VALUES (?,?,?)', [idProducto, idCliente, cantidad]);
@@ -63,7 +58,7 @@ class CarritoController {
                     return;
                 }
             }
-            catch (_b) {
+            catch (_a) {
                 res.json(false);
             }
         });
