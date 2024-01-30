@@ -44,9 +44,14 @@ class CarritoController {
                 const buscar = yield database_1.default.query('SELECT * FROM carrito WHERE idProducto = ? AND idCliente = ?', [idProducto, idCliente]);
                 console.log(buscar.length);
                 if (buscar.length > 0) {
-                    const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
-                    const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
-                    res.json(respuesta);
+                    try {
+                        const inventario = yield database_1.default.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad, idCliente, cantidad]);
+                        const respuesta = yield database_1.default.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?', [cantidad, idProducto, idCliente]);
+                        res.json(respuesta);
+                    }
+                    catch (_a) {
+                        res.json(false);
+                    }
                     return;
                 }
                 else {
@@ -56,7 +61,7 @@ class CarritoController {
                     return;
                 }
             }
-            catch (_a) {
+            catch (_b) {
                 res.json(false);
             }
         });

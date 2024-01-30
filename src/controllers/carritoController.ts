@@ -34,10 +34,16 @@ class CarritoController{
         console.log(buscar.length);
         if(buscar.length>0)
         {
-            
-            const respuesta = await pool.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?',[cantidad,idProducto,idCliente]);
+            try{
             const inventario= await pool.query("UPDATE producto pro join carrito ca on pro.idProducto=ca.idProducto set pro.stock=pro.stock-? WHERE ca.idCliente = ? AND pro.stock >= ?", [cantidad,idCliente,cantidad]);
+            const respuesta = await pool.query('UPDATE carrito SET cantidad =cantidad+ ? WHERE idProducto = ? AND idCliente = ?',[cantidad,idProducto,idCliente]);
             res.json(respuesta);
+        }
+            catch
+            {
+                res.json(false);
+            }
+            
             
             return;
         }
