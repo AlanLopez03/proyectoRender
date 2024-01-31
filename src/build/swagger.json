@@ -110,9 +110,9 @@
                 ],
                 "parameters": [
                     {
-                        "name": "Datos",
+                        "name": "Correo",
                         "in": "path",
-                        "description": "Datos del usuario",
+                        "description": "Correo del usuario",
                         "required": true,
                         "type": "string"
                     },
@@ -121,7 +121,7 @@
                         "in": "path",
                         "description": "Contraseña del usuario",
                         "required": true,
-                        "type": "string"
+                        "type": "password"
                     }
                 ],
                 "responses": {
@@ -138,9 +138,6 @@
                                     "idRol": 1
                                 }
                             ]
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/Usuarios"
                         }
                     },
                     "403": {
