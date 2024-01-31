@@ -72,10 +72,10 @@ class ProductoController
         }
         res.status(404).json({'mensaje': 'Producto no encontrados en esta categoria'});   
     }   
-    public async prueba(req: Request, res: Response): Promise <void>{
-        const resp= await pool.query('SELECT * FROM producto');
-        res.json(resp);
-    }
+    //public async prueba(req: Request, res: Response): Promise <void>{
+    //    const resp= await pool.query('SELECT * FROM producto');
+    //    res.json(resp);
+    //}
     public async buscarporNombre(req: Request, res: Response): Promise <void>{
         const {nombre} = req.body;//Parece que si jala Agregar al swagger
         const respuesta = await pool.query('SELECT * FROM producto WHERE nombre LIKE ?', [`%${nombre}%`]);

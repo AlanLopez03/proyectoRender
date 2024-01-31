@@ -114,9 +114,15 @@
                         "in": "path",
                         "description": "Datos del usuario",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/login"
-                        }
+                        "type": "string"
+          
+                    },
+                    {
+                        "name": "password",
+                        "in": "path",
+                        "description": "Contraseña del usuario",
+                        "required": true,
+                        "type": "string"
                     }
 
                 ],
@@ -141,7 +147,7 @@
                         }
                     },
                     "403": {
-                        "description": "False"
+                        "description": "Error"
                     }
                 }
             }
