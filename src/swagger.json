@@ -101,7 +101,7 @@
             }
         },
         "/api/usuarios/login/{correo}/{password}": {
-            "get": {
+            "post": {
                 "tags": ["Usuarios"],
                 "summary": "Iniciar sesión",
                 "description": "<p>Servicio que permite que valida el inicio de desion de un usuario mediante su correo y contraseña,</p>Si se tiene éxito devuelve la información del usuario.Si no devuelve false",
@@ -110,7 +110,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "Correo",
+                        "name": "correo",
                         "in": "path",
                         "description": "Correo del usuario",
                         "required": true,
@@ -122,7 +122,7 @@
                         "in": "path",
                         "description": "Contraseña del usuario",
                         "required": true,
-                        "type": "password"
+                        "type": "string"
                     }
 
                 ],
