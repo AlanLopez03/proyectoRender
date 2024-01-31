@@ -100,6 +100,50 @@
                 }
             }
         },
+        "/api/usuarios/login/{correo}/{password}": {
+            "get": {
+                "tags": ["Usuarios"],
+                "summary": "Iniciar sesión",
+                "description": "<p>Servicio que permite que valida el inicio de desion de un usuario mediante su correo y contraseña,</p>Si se tiene éxito devuelve la información del usuario.Si no devuelve false",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Datos",
+                        "in": "path",
+                        "description": "Datos del usuario",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idUsuario": 1,
+                                    "nombre": "Juan Perez",
+                                    "correo": "correo@example.com",
+                                    "username": "juanperez",
+                                    "password": "123",
+                                    "idRol": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Usuarios"
+                        }
+                    },
+                    "403": {
+                        "description": "False"
+                    }
+                }
+            }
+        },
         "/api/usuarios/crearUsuario/": {
             "post": {
                 "tags": ["Usuarios"],
@@ -2298,6 +2342,19 @@
                 "valor": {
                     "type": "Text",
                     "description": "Valor a buscar"
+                }
+            }
+        },
+        "login": {
+            "type": "object",
+            "properties": {
+                "correo": {
+                    "type": "Text",
+                    "description": "Nombre de usuario"
+                },
+                "password": {
+                    "type": "Text",
+                    "description": "Contraseña de usuario"
                 }
             }
         },
