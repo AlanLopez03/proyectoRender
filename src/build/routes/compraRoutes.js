@@ -17,6 +17,7 @@ class CompraRoutes {
         this.router.get('/', compraController_1.compraController.list);
         this.router.get('/:id', compraController_1.compraController.listOne);
         this.router.put('/modificarEstadoCompra/:id', compraController_1.compraController.modificarEstadoCompra);
+        this.router.get('/verCompras/:id', compraController_1.compraController.buscarComprasUsuario);
     }
 }
 const compraRoutes = new CompraRoutes();

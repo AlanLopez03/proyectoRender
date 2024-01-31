@@ -143,5 +143,14 @@ public async verMenosVendidos(req: Request, res: Response): Promise <void>{
     res.status(404).json({'mensaje': 'No hay productos'});
     }
 }
+public async buscarComprasUsuario(req: Request, res: Response): Promise <void>{
+    const {id} = req.params;
+    const respuesta = await pool.query("SELECT * FROM compra WHERE idCliente = ?",[id]);
+    if(respuesta.length>0){
+    res.json(respuesta);
+    return ;
+    }
+    res.json(false);
+    }
 }
 export const compraController = new CompraController();
