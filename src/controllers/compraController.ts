@@ -34,16 +34,12 @@ res.status(404).json({'mensaje': 'Compra no encontrada'});
 public async crearCompra(req: Request, res: Response): Promise<void> 
 {
     try
-    {const {id} = req.params;
+    {const {id} = req.params;//id dek cliente
     const {fecha} = req.body;
     const {idEdo} = req.body;
-    console.log(id);
-    console.log(fecha);
-    console.log(idEdo);
-    const productosVendidos = await pool.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?",[id]);
-    const busca = await pool.query("SELECT SUM(ca.cantidad * pro.precio * (pro.descuento)) AS total FROM carrito ca JOIN producto pro ON pro.idProducto = ca.idProducto WHERE ca.idCliente = ?",[id]);
+    const productosVendidos = await pool.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?",[id]);//productos que se van a comprar
+    const busca = await pool.query("SELECT SUM(ca.cantidad * pro.precio * (pro.descuento)) AS total FROM carrito ca JOIN producto pro ON pro.idProducto = ca.idProducto WHERE ca.idCliente = ?",[id]);//total de la compra
     const total =busca[0].total;
-    console.log(total);
     const compraData = {
         fecha: req.body.fecha,
         monto: total,
@@ -51,10 +47,15 @@ public async crearCompra(req: Request, res: Response): Promise<void>
         idCliente: id
     };
     const respuesta = await pool.query("INSERT INTO compra set ? ",[compraData]);
+    const idCompra = respuesta.insertId;  
         for (const producto of productosVendidos) {
-            await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);}
-            
+            await pool.query("INSERT INTO pedido set ?",[idCompra,producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
+            await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);
+        }
+   
+
     const limpiaCarrito = await  pool.query("DELETE FROM carrito WHERE idCliente = ?",[id]);
+    
     res.json(respuesta);
 }
     catch(e){
