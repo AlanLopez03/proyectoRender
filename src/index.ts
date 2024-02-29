@@ -19,7 +19,6 @@ import rolesRoutes from './routes/rolesRoutes';
 import swagger_ui_express from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
 
-
 class Server
 {
 public app: Application;
@@ -29,6 +28,7 @@ this.app= express();
 this.config();
 this.routes();
 this.app.use('/documentacion/',swagger_ui_express.serve, swagger_ui_express.setup(swaggerDocument));//documentacion
+this.app.use(cors({origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app'}));
 }
 config (): void
 {
