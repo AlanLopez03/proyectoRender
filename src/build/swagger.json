@@ -14,7 +14,7 @@
     "tags": [
         {
             "name": "Usuarios",
-            "description": "API para obtener información de los usuarios del ciit"
+            "description": "API para obtener información de los usuarios del sistema"
         },
         {
             "name": "Roles",

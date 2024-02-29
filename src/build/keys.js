@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     database: {
-        host: 'ls-c42a4122ebecdbb549d759e468aabcad21082e1b.c7xbbvdviovo.us-east-1.rds.amazonaws.com',
-        user: 'dbmasteruser',
-        password: ':LH`y0?w,amkS]%m^FZ6,uxvv~$bpc8{',
-        database: 'joyeria'
+        host: 'bbdhjuctnoeljvn7znzp-mysql.services.clever-cloud.com',
+        user: 'uexf0yuzh3qbg3ow',
+        password: 'mn01o3QW8mqEA9m4A5hy',
+        database: 'bbdhjuctnoeljvn7znzp'
     }
 };
