@@ -3,18 +3,26 @@ import pool from '../database';
 
 class MarcaController{
 public async list(req: Request, res: Response ): Promise<void>{
+    try{
     const respuesta = await pool.query('SELECT * FROM marca');
-    res.json( respuesta );
+    res.json( respuesta );}
+    catch(error){
+        res.json(false)
+    }
 }
 
 public async listOne(req: Request, res: Response): Promise <void>{
-const {id} = req.params;
-const respuesta = await pool.query('SELECT * FROM marca WHERE idMarca = ?', [id]);
-if(respuesta.length>0){
-res.json(respuesta[0]);
-return ;
-}
-res.status(404).json({'mensaje': 'Marca no encontrada'});
+    try{
+    const {id} = req.params;
+
+    const respuesta = await pool.query('SELECT * FROM marca WHERE idMarca = ?', [id]);
+    if(respuesta.length>0){
+    res.json(respuesta[0]);
+    return ;
+        }
+    }
+    catch(error){
+    res.json(false);}
 }
 
 public async create(req: Request, res: Response): Promise<void> {

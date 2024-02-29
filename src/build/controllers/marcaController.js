@@ -17,19 +17,28 @@ const database_1 = __importDefault(require("../database"));
 class MarcaController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respuesta = yield database_1.default.query('SELECT * FROM marca');
-            res.json(respuesta);
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM marca');
+                res.json(respuesta);
+            }
+            catch (error) {
+                res.json(false);
+            }
         });
     }
     listOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const respuesta = yield database_1.default.query('SELECT * FROM marca WHERE idMarca = ?', [id]);
-            if (respuesta.length > 0) {
-                res.json(respuesta[0]);
-                return;
+            try {
+                const { id } = req.params;
+                const respuesta = yield database_1.default.query('SELECT * FROM marca WHERE idMarca = ?', [id]);
+                if (respuesta.length > 0) {
+                    res.json(respuesta[0]);
+                    return;
+                }
             }
-            res.status(404).json({ 'mensaje': 'Marca no encontrada' });
+            catch (error) {
+                res.json(false);
+            }
         });
     }
     create(req, res) {
