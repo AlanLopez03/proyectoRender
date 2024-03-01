@@ -7,12 +7,17 @@ class PedidoController{
         res.json( respuesta );
     }
     public async gestionarPedidos(req: Request, res: Response ): Promise<void>{
-        const respuesta = await pool.query('SELECT * FROM pedido join compra on compra.idCompra=pedido.idPedido where idEdo!=1');
+        try
+      {  const respuesta = await pool.query('SELECT * FROM pedido join compra on compra.idCompra=pedido.idPedido where idEdo!=1');
         if(respuesta.length>0){
             res.json(respuesta);
             return ;
-            }
-        res.status(404).json({'mensaje': 'No hay pedidos activos por gestionar'});
+            }}
+        catch (error)
+        {
+            res.json(false);
+        }
+       
     }
 
     public async listOne(req: Request, res: Response): Promise <void>{
@@ -55,6 +60,13 @@ class PedidoController{
         return;
         //res.status(404).json({'mensaje': 'El pedido no existe o el estado es nulo'});
     
+    }
+    public async verPedidos(req: Request, res: Response ): Promise<void>
+    {
+        const {id} = req.params;
+        const respuesta = await pool.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
+        res.json(respuesta);
+        return;
     }
 }
 

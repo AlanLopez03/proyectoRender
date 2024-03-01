@@ -23,12 +23,16 @@ class PedidoController {
     }
     gestionarPedidos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respuesta = yield database_1.default.query('SELECT * FROM pedido join compra on compra.idCompra=pedido.idPedido where idEdo!=1');
-            if (respuesta.length > 0) {
-                res.json(respuesta);
-                return;
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM pedido join compra on compra.idCompra=pedido.idPedido where idEdo!=1');
+                if (respuesta.length > 0) {
+                    res.json(respuesta);
+                    return;
+                }
             }
-            res.status(404).json({ 'mensaje': 'No hay pedidos activos por gestionar' });
+            catch (error) {
+                res.json(false);
+            }
         });
     }
     listOne(req, res) {
@@ -75,6 +79,14 @@ class PedidoController {
             res.json(respuesta);
             return;
             //res.status(404).json({'mensaje': 'El pedido no existe o el estado es nulo'});
+        });
+    }
+    verPedidos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const respuesta = yield database_1.default.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
+            res.json(respuesta);
+            return;
         });
     }
 }

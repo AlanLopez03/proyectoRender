@@ -15,7 +15,7 @@ class PedidoRoutes{
         this.router.get('/gestionarPedidos', pedidoController.gestionarPedidos );
         this.router.get('/', pedidoController.list );
         this.router.get('/:id', pedidoController.listOne );
-
+        this.router.get('/verPedidos/:id', pedidoController.verPedidos );
         //this.router.put('/modificarEstadoPedido/:id', pedidoController.modificarEstadoPedido );
         }
 }

@@ -5,4 +5,4 @@ export default{
         password:'~6GsJ1p_2wjA=yP9Ets6#Hd$Bbn3K[Uy',
         database:'Joyeria'
     }
-}   
+}
