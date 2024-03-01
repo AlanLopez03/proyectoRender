@@ -29,7 +29,7 @@ class Server {
         this.config();
         this.routes();
         this.app.use('/documentacion/', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_json_1.default)); //documentacion
-        this.app.use((0, cors_1.default)({ origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app' }));
+        //this.app.use(cors({origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app'}));
     }
     config() {
         this.app.set('port', process.env.PORT || 80); //anteriormente 3000

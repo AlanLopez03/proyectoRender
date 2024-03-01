@@ -28,7 +28,7 @@ this.app= express();
 this.config();
 this.routes();
 this.app.use('/documentacion/',swagger_ui_express.serve, swagger_ui_express.setup(swaggerDocument));//documentacion
-this.app.use(cors({origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app'}));
+//this.app.use(cors({origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app'}));
 }
 config (): void
 {
