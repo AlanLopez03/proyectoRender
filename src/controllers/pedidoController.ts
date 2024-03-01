@@ -63,10 +63,16 @@ class PedidoController{
     }
     public async verPedidos(req: Request, res: Response ): Promise<void>
     {
+        try{
         const {id} = req.params;
         const respuesta = await pool.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
         res.json(respuesta);
         return;
+        }
+        catch (error)
+        {
+            res.json(false);
+        }
     }
 }
 

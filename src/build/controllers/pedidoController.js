@@ -83,10 +83,15 @@ class PedidoController {
     }
     verPedidos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const respuesta = yield database_1.default.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
-            res.json(respuesta);
-            return;
+            try {
+                const { id } = req.params;
+                const respuesta = yield database_1.default.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
+                res.json(respuesta);
+                return;
+            }
+            catch (error) {
+                res.json(false);
+            }
         });
     }
 }
