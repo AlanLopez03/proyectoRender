@@ -34,7 +34,8 @@ res.status(404).json({'mensaje': 'Compra no encontrada'});
 public async crearCompra(req: Request, res: Response): Promise<void> 
 {
     try
-    {const {id} = req.params;//id dek cliente
+    {
+    const {id} = req.params;//id dek cliente
     const {fecha} = req.body;
     const {idEdo} = req.body;
     const productosVendidos = await pool.query("SELECT ca.idProducto, ca.cantidad FROM carrito ca WHERE ca.idCliente = ?",[id]);//productos que se van a comprar
@@ -49,7 +50,7 @@ public async crearCompra(req: Request, res: Response): Promise<void>
     const respuesta = await pool.query("INSERT INTO compra set ? ",[compraData]);
     const idCompra = respuesta.insertId;  
         for (const producto of productosVendidos) {
-            await pool.query("INSERT INTO pedido set ?",[idCompra,producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
+            //await pool.query("INSERT INTO pedido set ?",[producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
             await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);
         }
    
@@ -59,7 +60,8 @@ public async crearCompra(req: Request, res: Response): Promise<void>
     res.json(respuesta);
 }
     catch(e){
-        res.json(e);
+        
+        res.json(false);
      } 
    
 }

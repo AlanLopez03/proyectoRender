@@ -66,11 +66,12 @@ class PedidoController{
         try{
         const {id} = req.params;
         const respuesta = await pool.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
-        res.json(respuesta);
+        res.json(respuesta[0]);
         return;
         }
         catch (error)
         {
+            console.log(error);
             res.json(false);
         }
     }

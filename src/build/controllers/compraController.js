@@ -62,14 +62,14 @@ class CompraController {
                 const respuesta = yield database_1.default.query("INSERT INTO compra set ? ", [compraData]);
                 const idCompra = respuesta.insertId;
                 for (const producto of productosVendidos) {
-                    yield database_1.default.query("INSERT INTO pedido set ?", [idCompra, producto.cantidad, producto.cantidad * producto.precio, idCompra, producto.idProducto]);
+                    //await pool.query("INSERT INTO pedido set ?",[producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
                     yield database_1.default.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?", [producto.cantidad, producto.idProducto]);
                 }
                 const limpiaCarrito = yield database_1.default.query("DELETE FROM carrito WHERE idCliente = ?", [id]);
                 res.json(respuesta);
             }
             catch (e) {
-                res.json(e);
+                res.json(false);
             }
         });
     }
