@@ -53,7 +53,7 @@ public async crearCompra(req: Request, res: Response): Promise<void>
             var precio=await pool.query("SELECT precio  from producto where idProducto = ?",[producto.idProducto]);
             console.log(precio[0].precio);
             console.log("Cantidad=",producto.cantidad)
-            await pool.query("INSERT INTO pedido (cantidadProducto,subtotal,idCompra,idProducto) values(?,?,?,?) ",[producto.cantidad,producto.cantidad*precio[0].precio            ,idCompra, producto.idProducto]);
+            await pool.query("INSERT INTO pedido (cantidadProducto,subtotal,idCompra,idProducto) values(?,?,?,?) ",[producto.cantidad,producto.cantidad*precio[0].precio,idCompra, producto.idProducto]);
 
             await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);
         }

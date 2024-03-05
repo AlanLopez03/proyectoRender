@@ -85,7 +85,17 @@ class ProductoController
         }
         res.json(false);
     }
-
+    public async agregarStock(req: Request, res: Response): Promise <void>{
+        const {id} = req.params;
+        const {stock}=req.body;
+        try{
+        const respuesta = await pool.query('UPDATE producto set stock=stock+? WHERE idProducto = ?', [stock,id]);
+        res.json(respuesta);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 
 }
 

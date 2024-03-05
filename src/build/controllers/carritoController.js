@@ -75,6 +75,13 @@ class CarritoController {
             }
         });
     }
+    listarCompras(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const respuesta = yield database_1.default.query('SELECT * FROM carrito WHERE idCliente = ?', [id]);
+            res.json(respuesta);
+        });
+    }
     limpiarCarrito(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;

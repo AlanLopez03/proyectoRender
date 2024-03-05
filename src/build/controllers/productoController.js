@@ -101,5 +101,18 @@ class ProductoController {
             res.json(false);
         });
     }
+    agregarStock(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const { stock } = req.body;
+            try {
+                const respuesta = yield database_1.default.query('UPDATE producto set stock=stock+? WHERE idProducto = ?', [stock, id]);
+                res.json(respuesta);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
+    }
 }
 exports.productoController = new ProductoController();
