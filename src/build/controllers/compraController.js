@@ -40,10 +40,6 @@ class CompraController {
             res.status(404).json({ 'mensaje': 'Compra no encontrada' });
         });
     }
-    //public async create(req: Request, res: Response): Promise<void> {
-    //const resp = await pool.query("INSERT INTO compra set ?",[req.body]);
-    //res.json(resp);
-    //}
     crearCompra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -61,9 +57,19 @@ class CompraController {
                 };
                 const respuesta = yield database_1.default.query("INSERT INTO compra set ? ", [compraData]);
                 const idCompra = respuesta.insertId;
-                for (const producto of productosVendidos) {
-                    //await pool.query("INSERT INTO pedido set ?",[producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
-                    yield database_1.default.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?", [producto.cantidad, producto.idProducto]);
+                try {
+                    for (const producto of productosVendidos) {
+                        //Insertar en la tabla pedido por cada producto
+                        //Habria que multiplicarlo por el descuento
+                        var precio = yield database_1.default.query("SELECT precio  from producto where idProducto = ?", [producto.idProducto]);
+                        console.log(precio[0].precio);
+                        console.log("Cantidad=", producto.cantidad);
+                        yield database_1.default.query("INSERT INTO pedido (cantidadProducto,subtotal,idCompra,idProducto) values(?,?,?,?) ", [producto.cantidad, producto.cantidad * precio[0].precio, idCompra, producto.idProducto]);
+                        yield database_1.default.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?", [producto.cantidad, producto.idProducto]);
+                    }
+                }
+                catch (e) {
+                    console.log("error", e);
                 }
                 const limpiaCarrito = yield database_1.default.query("DELETE FROM carrito WHERE idCliente = ?", [id]);
                 res.json(respuesta);

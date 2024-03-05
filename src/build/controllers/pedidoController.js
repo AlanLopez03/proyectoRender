@@ -86,7 +86,7 @@ class PedidoController {
             try {
                 const { id } = req.params;
                 const respuesta = yield database_1.default.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
-                res.json(respuesta[0]);
+                res.json(respuesta);
                 return;
             }
             catch (error) {

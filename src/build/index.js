@@ -32,7 +32,7 @@ class Server {
         //this.app.use(cors({origin: 'https://buena--ephemeral-youtiao-d28fc8.netlify.app'}));
     }
     config() {
-        this.app.set('port', process.env.PORT || 80); //anteriormente 3000
+        this.app.set('port', process.env.PORT || 3000); //anteriormente 80
         this.app.use((0, morgan_1.default)('dev'));
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());

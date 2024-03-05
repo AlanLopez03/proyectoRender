@@ -26,10 +26,7 @@ return ;
 res.status(404).json({'mensaje': 'Compra no encontrada'});
 }
 
-//public async create(req: Request, res: Response): Promise<void> {
-//const resp = await pool.query("INSERT INTO compra set ?",[req.body]);
-//res.json(resp);
-//}
+
 
 public async crearCompra(req: Request, res: Response): Promise<void> 
 {
@@ -49,11 +46,21 @@ public async crearCompra(req: Request, res: Response): Promise<void>
     };
     const respuesta = await pool.query("INSERT INTO compra set ? ",[compraData]);
     const idCompra = respuesta.insertId;  
+    try{
         for (const producto of productosVendidos) {
-            //await pool.query("INSERT INTO pedido set ?",[producto.cantidad,producto.cantidad*producto.precio,idCompra, producto.idProducto]);
+            //Insertar en la tabla pedido por cada producto
+            //Habria que multiplicarlo por el descuento
+            var precio=await pool.query("SELECT precio  from producto where idProducto = ?",[producto.idProducto]);
+            console.log(precio[0].precio);
+            console.log("Cantidad=",producto.cantidad)
+            await pool.query("INSERT INTO pedido (cantidadProducto,subtotal,idCompra,idProducto) values(?,?,?,?) ",[producto.cantidad,producto.cantidad*precio[0].precio            ,idCompra, producto.idProducto]);
+
             await pool.query("UPDATE producto SET stock = stock - ? WHERE idProducto = ?",[producto.cantidad, producto.idProducto]);
         }
-   
+    }
+    catch(e){
+        console.log("error",e);
+    }
 
     const limpiaCarrito = await  pool.query("DELETE FROM carrito WHERE idCliente = ?",[id]);
     
@@ -68,9 +75,10 @@ public async crearCompra(req: Request, res: Response): Promise<void>
 
 
 
-public async list(req: Request, res: Response ): Promise<void>{
-const respuesta = await pool.query('SELECT * FROM compra');
-res.json( respuesta );
+public async list(req: Request, res: Response ): Promise<void>
+{
+    const respuesta = await pool.query('SELECT * FROM compra');
+    res.json( respuesta );
 }
 
 

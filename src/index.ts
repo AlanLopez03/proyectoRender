@@ -32,7 +32,7 @@ this.app.use('/documentacion/',swagger_ui_express.serve, swagger_ui_express.setu
 }
 config (): void
 {
-this.app.set('port',process.env.PORT|| 80);//anteriormente 3000
+this.app.set('port',process.env.PORT|| 3000);//anteriormente 80
 this.app.use(morgan('dev'));
 this.app.use(cors());
 this.app.use(express.json());
