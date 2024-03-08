@@ -1,22 +1,23 @@
 import {Request,Response} from 'express';
+import bcrypt from 'bcryptjs';
 import pool from '../database';
 
 class UsuariosController
 {
-
     public async login(req: Request, res: Response ): Promise<void>
     {
         const {correo, password} = req.params;
-        console.log(correo);
-        console.log(password);
-        const respuesta = await pool.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?',[correo,password]);
+        //Se supone que son correos unicos
+        const respuesta = await pool.query('SELECT * FROM usuarios WHERE correo = ? ',[correo]);
         if(respuesta.length>0)
-        {
+        //Compara la contraseña ingresada con la contraseña encriptada en la base de datos y devuelve un booleano
+            if (await bcrypt.compare(password, respuesta[0].password))
+            {
             res.json(respuesta[0]);
             return ;
-        }
+            }
+        //El usuario no existe o la contraseña es incorrecta
         res.json(false);
-        //res.status(404).json({'mensaje': 'Usuario no encontrado'});
     }
     
     public async list(req: Request, res: Response ): Promise<void>
@@ -32,18 +33,28 @@ class UsuariosController
 
     public async listOne(req: Request, res: Response): Promise <void>
     {
-    const {id} = req.params;
-    const respuesta = await pool.query('SELECT * FROM usuarios WHERE idUsuario = ?', [id]);
-    if(respuesta.length>0){
-    res.json(respuesta[0]);
-    return ;
-    }
-    res.json(false);
+        const {id} = req.params;
+        const respuesta = await pool.query('SELECT * FROM usuarios WHERE idUsuario = ?', [id]);
+        if(respuesta.length>0)
+        {
+            res.json(respuesta[0]);
+            return ;
+        }
+        res.json(false);
     }
 
     public async create(req: Request, res: Response): Promise<void> {
+    
+    const salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+    try{
     const resp = await pool.query("INSERT INTO usuarios set ?",[req.body]);
     res.json(resp);
+    }
+    catch(error)
+    {
+        res.json(error);
+    }
     }
 
     public async update(req: Request, res: Response): Promise<void> {

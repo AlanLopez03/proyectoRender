@@ -13,20 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuariosController = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const database_1 = __importDefault(require("../database"));
 class UsuariosController {
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { correo, password } = req.params;
-            console.log(correo);
-            console.log(password);
-            const respuesta = yield database_1.default.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?', [correo, password]);
-            if (respuesta.length > 0) {
-                res.json(respuesta[0]);
-                return;
-            }
+            //Se supone que son correos unicos
+            const respuesta = yield database_1.default.query('SELECT * FROM usuarios WHERE correo = ? ', [correo]);
+            if (respuesta.length > 0)
+                //Compara la contraseña ingresada con la contraseña encriptada en la base de datos y devuelve un booleano
+                if (yield bcryptjs_1.default.compare(password, respuesta[0].password)) {
+                    res.json(respuesta[0]);
+                    return;
+                }
+            //El usuario no existe o la contraseña es incorrecta
             res.json(false);
-            //res.status(404).json({'mensaje': 'Usuario no encontrado'});
         });
     }
     list(req, res) {
@@ -53,8 +55,15 @@ class UsuariosController {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const resp = yield database_1.default.query("INSERT INTO usuarios set ?", [req.body]);
-            res.json(resp);
+            const salt = yield bcryptjs_1.default.genSalt(10);
+            req.body.password = yield bcryptjs_1.default.hash(req.body.password, salt);
+            try {
+                const resp = yield database_1.default.query("INSERT INTO usuarios set ?", [req.body]);
+                res.json(resp);
+            }
+            catch (error) {
+                res.json(error);
+            }
         });
     }
     update(req, res) {
