@@ -2,25 +2,26 @@ import {Request,Response} from 'express';
 import pool from '../database';
 
 class CarritoController{
-    public async buscar(req: Request, res: Response ): Promise<void>
-    {
-        const {nombreProducto} = req.body;
-        try
-        {
-            //Se supone recibe el nombre del producto y busca en la base de datos si existe
-            const respuesta = await pool.query('SELECT * FROM producto WHERE nombre = ?',[nombreProducto]);
-            if(respuesta.length>0)
-            {
-                res.json(respuesta[0]);
-                return ;
-            }
-            res.json(false);
-        }
-        catch
-        {
-            res.json(false);
-        }
-    }
+    //Ya existe en productoController
+    //public async buscar(req: Request, res: Response ): Promise<void>
+    //{
+    //    const {nombreProducto} = req.body;
+    //    try
+    //    {
+    //        //Se supone recibe el nombre del producto y busca en la base de datos si existe
+    //        const respuesta = await pool.query('SELECT * FROM producto WHERE nombre = ?',[nombreProducto]);
+    //        if(respuesta.length>0)
+    //        {
+    //            res.json(respuesta[0]);
+    //            return ;
+    //        }
+    //        res.json(false);
+    //    }
+    //    catch
+    //    {
+    //        res.json(false);
+    //    }
+    //}
     public async insertarProducto(req: Request, res: Response ): Promise<void>{
         const {idProducto} = req.body;
         const {idCliente} = req.body;

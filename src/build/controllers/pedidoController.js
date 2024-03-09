@@ -18,7 +18,11 @@ class PedidoController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const respuesta = yield database_1.default.query('SELECT * FROM pedido');
-            res.json(respuesta);
+            if (respuesta.length > 0) {
+                res.json(respuesta);
+                return;
+            }
+            res.json(false);
         });
     }
     gestionarPedidos(req, res) {
@@ -38,12 +42,17 @@ class PedidoController {
     listOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const respuesta = yield database_1.default.query('SELECT * FROM pedido WHERE idPedido = ?', [id]);
-            if (respuesta.length > 0) {
-                res.json(respuesta[0]);
-                return;
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM pedido WHERE idPedido = ?', [id]);
+                if (respuesta.length > 0) {
+                    res.json(respuesta[0]);
+                    return;
+                }
+                res.json(false);
             }
-            res.status(404).json({ 'mensaje': 'Pedido no encontrado' });
+            catch (error) {
+                res.json(false);
+            }
         });
     }
     create(req, res) {
@@ -83,16 +92,19 @@ class PedidoController {
     }
     verPedidos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
             try {
-                const { id } = req.params;
                 const respuesta = yield database_1.default.query("SELECT * FROM pedido WHERE idCompra = ?", [id]);
-                res.json(respuesta);
-                return;
+                if (respuesta.length > 0) {
+                    console.log(respuesta);
+                    res.json(respuesta);
+                    return;
+                }
             }
             catch (error) {
                 console.log(error);
-                res.json(false);
             }
+            res.json(false);
         });
     }
 }

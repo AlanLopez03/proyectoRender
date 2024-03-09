@@ -18,33 +18,53 @@ class RolesController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const respuesta = yield database_1.default.query('SELECT * FROM roles');
-            res.json(respuesta);
+            if (respuesta.length > 0) {
+                res.json(respuesta);
+                return;
+            }
+            res.json(false);
         });
     }
     listOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const respuesta = yield database_1.default.query('SELECT * FROM roles WHERE idRol = ?', [id]);
-            if (respuesta.length > 0) {
-                res.json(respuesta[0]);
-                return;
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM roles WHERE idRol = ?', [id]);
+                if (respuesta.length > 0) {
+                    res.json(respuesta[0]);
+                    return;
+                }
             }
-            res.status(404).json({ 'mensaje': 'Rol no encontrado' });
+            catch (e) {
+                console.log(e);
+                res.json(false);
+            }
         });
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const resp = yield database_1.default.query("INSERT INTO roles set ?", [req.body]);
-            res.json(resp);
+            try {
+                const resp = yield database_1.default.query("INSERT INTO roles set ?", [req.body]);
+                res.json(resp);
+            }
+            catch (e) {
+                console.log(e);
+                res.json(false);
+            }
         });
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             console.log(req.params);
-            //console.log(id)
-            const resp = yield database_1.default.query("UPDATE roles set ? WHERE idRol = ?", [req.body, id]);
-            res.json(resp);
+            try {
+                const resp = yield database_1.default.query("UPDATE roles set ? WHERE idRol = ?", [req.body, id]);
+                res.json(resp);
+            }
+            catch (e) {
+                console.log(e);
+                res.json(false);
+            }
         });
     }
     delete(req, res) {

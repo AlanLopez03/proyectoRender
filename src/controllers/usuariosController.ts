@@ -1,4 +1,4 @@
-import {Request,Response} from 'express';
+import e, {Request,Response} from 'express';
 import bcrypt from 'bcryptjs';
 import pool from '../database';
 
@@ -23,8 +23,10 @@ class UsuariosController
     public async list(req: Request, res: Response ): Promise<void>
     {
         try
-        {const respuesta = await pool.query('SELECT * from usuarios');
-        res.json( respuesta );}
+        {
+        const respuesta = await pool.query('SELECT * from usuarios');
+        res.json( respuesta );
+        }
         catch
         {
             res.json(false);
@@ -74,14 +76,18 @@ class UsuariosController
     public async verPedidos(req: Request, res: Response ): Promise<void>
         {
             const {id} = req.params;
-            console.log(id);
-            const respuesta = await pool.query("SELECT pe.idPedido,pro.idProducto,pe.cantidadProducto,pe.subtotal FROM pedido pe JOIN compra co on pe.idCompra=co.idCompra join producto pro on pro.idProducto= pe.idProducto join usuarios usr ON usr.idUsuario=co.idCliente WHERE usr.idUsuario=?",[id]);
-            if(respuesta.length>0)
-                {
-                res.json(respuesta[0]);
-                return ;
-                }
-                res.status(404).json({'mensaje': 'El usuario no tiene pedidos'});
+            try
+            {
+                const respuesta = await pool.query("SELECT pe.idPedido,pro.idProducto,pe.cantidadProducto,pe.subtotal FROM pedido pe JOIN compra co on pe.idCompra=co.idCompra join producto pro on pro.idProducto= pe.idProducto join usuarios usr ON usr.idUsuario=co.idCliente WHERE usr.idUsuario=?",[id]);
+                if(respuesta.length>0)
+                    res.json(respuesta);
+                else
+                    res.json(false);      
+            }
+            catch(error)
+            {
+                res.json(error);
+            }   
         }
 
     public async rastrearPedidos(req: Request, res: Response ): Promise<void>
@@ -96,6 +102,7 @@ class UsuariosController
             }
             res.status(404).json({'mensaje': 'Este pedido no existe'});
     }
+    //No se si lo vamos a usar
     public async recomendaciones(req: Request, res: Response ): Promise<void>{
 
         const {id} = req.params;
@@ -113,6 +120,7 @@ class UsuariosController
         }
 
     }
+    
     public async buscarUsuarioporAtributo(req: Request, res: Response ): Promise<void>{
         const {valor} = req.body;
         const respuesta = await pool.query("SELECT * FROM usuarios WHERE nombre like"+"'%"+valor+"%'");
@@ -120,7 +128,7 @@ class UsuariosController
             res.json(respuesta);
             return ;
         }
-        res.status(404).json({'mensaje': 'No se encontraron usuarios con ese atributo'});
+        res.json(false);
     }
 
 }

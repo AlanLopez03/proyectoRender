@@ -13,7 +13,7 @@ class CarritoRoutes{
         this.router.get('/verCarrito/:id', carritoController.verCarrito);
         this.router.delete('/limpiarCarrito/:id', carritoController.limpiarCarrito);
         this.router.delete('/eliminarProducto/:id', carritoController.eliminarProducto);
-        this.router.get('/buscar/:id', carritoController.buscar);
+        //this.router.get('/buscar/:id', carritoController.buscar);
         this.router.get('/listarCompras/:id', carritoController.listarCompras);
         //this.router.post('/crearUsuario', carritoController.create);
         //this.router.put('/actualizar/:id',carritoController.update);//ya funciona

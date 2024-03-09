@@ -85,13 +85,16 @@ class UsuariosController {
     verPedidos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            console.log(id);
-            const respuesta = yield database_1.default.query("SELECT pe.idPedido,pro.idProducto,pe.cantidadProducto,pe.subtotal FROM pedido pe JOIN compra co on pe.idCompra=co.idCompra join producto pro on pro.idProducto= pe.idProducto join usuarios usr ON usr.idUsuario=co.idCliente WHERE usr.idUsuario=?", [id]);
-            if (respuesta.length > 0) {
-                res.json(respuesta[0]);
-                return;
+            try {
+                const respuesta = yield database_1.default.query("SELECT pe.idPedido,pro.idProducto,pe.cantidadProducto,pe.subtotal FROM pedido pe JOIN compra co on pe.idCompra=co.idCompra join producto pro on pro.idProducto= pe.idProducto join usuarios usr ON usr.idUsuario=co.idCliente WHERE usr.idUsuario=?", [id]);
+                if (respuesta.length > 0)
+                    res.json(respuesta);
+                else
+                    res.json(false);
             }
-            res.status(404).json({ 'mensaje': 'El usuario no tiene pedidos' });
+            catch (error) {
+                res.json(error);
+            }
         });
     }
     rastrearPedidos(req, res) {
@@ -106,6 +109,7 @@ class UsuariosController {
             res.status(404).json({ 'mensaje': 'Este pedido no existe' });
         });
     }
+    //No se si lo vamos a usar
     recomendaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
@@ -130,7 +134,7 @@ class UsuariosController {
                 res.json(respuesta);
                 return;
             }
-            res.status(404).json({ 'mensaje': 'No se encontraron usuarios con ese atributo' });
+            res.json(false);
         });
     }
 }

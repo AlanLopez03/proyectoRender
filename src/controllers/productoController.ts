@@ -58,26 +58,37 @@ class ProductoController
         const { id } = req.params;
         const{descuento}=req.body;
         console.log(descuento);
-        //const resp = await pool.query("SELECT precio from  producto  WHERE idProducto = ?", [ id]);
-        const resp = await pool.query("UPDATE producto set descuento=? WHERE idProducto = ?", [descuento,id]);
-        res.json(resp);
+        try{
+            const resp = await pool.query("UPDATE producto set descuento=? WHERE idProducto = ?", [descuento,id]);
+            res.json(resp);
+            
+        }
+        catch(err){
+            console.log(err);
+            res.json(false);
+        }
 
     }
-    public async filtrarProductos(req: Request, res: Response): Promise <void>{
+    public async filtrarProductos(req: Request, res: Response): Promise <void>
+    {
         const {id} = req.params;
-        const respuesta = await pool.query('SELECT * FROM producto WHERE idCategoria = ?', [id]);
-        if(respuesta.length>0){
-        res.json(respuesta);
-        return ;
-        }
-        res.status(404).json({'mensaje': 'Producto no encontrados en esta categoria'});   
+        try
+        {
+            const respuesta = await pool.query('SELECT * FROM producto WHERE idCategoria = ?', [id]);
+            if(respuesta.length>0)
+            {
+                res.json(respuesta);
+                return ;
+            }
+        }   
+        catch(err){
+            console.log(err);
+            res.json(false);
+        }   
     }   
-    //public async prueba(req: Request, res: Response): Promise <void>{
-    //    const resp= await pool.query('SELECT * FROM producto');
-    //    res.json(resp);
-    //}
+
     public async buscarporNombre(req: Request, res: Response): Promise <void>{
-        const {nombre} = req.body;//Parece que si jala Agregar al swagger
+        const {nombre} = req.body;
         const respuesta = await pool.query('SELECT * FROM producto WHERE nombre LIKE ?', [`%${nombre}%`]);
         if(respuesta.length>0){
         res.json(respuesta);

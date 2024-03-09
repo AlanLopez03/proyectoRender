@@ -5,15 +5,32 @@ class CompraController{
 public async Ventas(req: Request, res: Response ): Promise<void>{
     const {fechaInicio} = req.body;
     const {fechaFin} = req.body;
-    if (fechaInicio==null || fechaFin==null)
+    var respuesta:any;
 
-       { const respuesta = await pool.query('SELECT * FROM compra');
-        res.json( respuesta );}
+    if (fechaInicio==null || fechaFin==null )
+       {  
+        respuesta = await pool.query('SELECT * FROM compra');
+        if (respuesta.length>0)
+            res.json(respuesta);
+        else
+            res.json(false);
+        }
     else
     {
-        const respuesta = await pool.query('SELECT * FROM compra where fecha between ? AND ?',[fechaInicio,fechaFin]);
-        res.json( respuesta );
+        try
+        {
+        respuesta = await pool.query('SELECT * FROM compra where fecha between ? AND ?',[fechaInicio,fechaFin]);
+        }
+        catch(e)
+        {
+            res.json(false);
+        }
+        if (respuesta.length>0)
+            res.json(respuesta);
+        else
+            res.json(false);
     }
+ 
 }
 
 public async listOne(req: Request, res: Response): Promise <void>{
@@ -23,7 +40,7 @@ if(respuesta.length>0){
     res.json(respuesta[0]);
 return ;
 }
-res.status(404).json({'mensaje': 'Compra no encontrada'});
+res.json(false);
 }
 
 

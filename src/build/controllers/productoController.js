@@ -70,29 +70,35 @@ class ProductoController {
             const { id } = req.params;
             const { descuento } = req.body;
             console.log(descuento);
-            //const resp = await pool.query("SELECT precio from  producto  WHERE idProducto = ?", [ id]);
-            const resp = yield database_1.default.query("UPDATE producto set descuento=? WHERE idProducto = ?", [descuento, id]);
-            res.json(resp);
+            try {
+                const resp = yield database_1.default.query("UPDATE producto set descuento=? WHERE idProducto = ?", [descuento, id]);
+                res.json(resp);
+            }
+            catch (err) {
+                console.log(err);
+                res.json(false);
+            }
         });
     }
     filtrarProductos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE idCategoria = ?', [id]);
-            if (respuesta.length > 0) {
-                res.json(respuesta);
-                return;
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE idCategoria = ?', [id]);
+                if (respuesta.length > 0) {
+                    res.json(respuesta);
+                    return;
+                }
             }
-            res.status(404).json({ 'mensaje': 'Producto no encontrados en esta categoria' });
+            catch (err) {
+                console.log(err);
+                res.json(false);
+            }
         });
     }
-    //public async prueba(req: Request, res: Response): Promise <void>{
-    //    const resp= await pool.query('SELECT * FROM producto');
-    //    res.json(resp);
-    //}
     buscarporNombre(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.body; //Parece que si jala Agregar al swagger
+            const { nombre } = req.body;
             const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE nombre LIKE ?', [`%${nombre}%`]);
             if (respuesta.length > 0) {
                 res.json(respuesta);

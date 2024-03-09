@@ -19,13 +19,25 @@ class CompraController {
         return __awaiter(this, void 0, void 0, function* () {
             const { fechaInicio } = req.body;
             const { fechaFin } = req.body;
+            var respuesta;
             if (fechaInicio == null || fechaFin == null) {
-                const respuesta = yield database_1.default.query('SELECT * FROM compra');
-                res.json(respuesta);
+                respuesta = yield database_1.default.query('SELECT * FROM compra');
+                if (respuesta.length > 0)
+                    res.json(respuesta);
+                else
+                    res.json(false);
             }
             else {
-                const respuesta = yield database_1.default.query('SELECT * FROM compra where fecha between ? AND ?', [fechaInicio, fechaFin]);
-                res.json(respuesta);
+                try {
+                    respuesta = yield database_1.default.query('SELECT * FROM compra where fecha between ? AND ?', [fechaInicio, fechaFin]);
+                }
+                catch (e) {
+                    res.json(false);
+                }
+                if (respuesta.length > 0)
+                    res.json(respuesta);
+                else
+                    res.json(false);
             }
         });
     }
@@ -37,7 +49,7 @@ class CompraController {
                 res.json(respuesta[0]);
                 return;
             }
-            res.status(404).json({ 'mensaje': 'Compra no encontrada' });
+            res.json(false);
         });
     }
     crearCompra(req, res) {

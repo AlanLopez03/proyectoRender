@@ -74,10 +74,10 @@
             "get": {
                 "tags": ["Usuarios"],
                 "summary": "Listado de todos los usuarios que existen en el sistema.",
-                "description": "<p>Servicio que devuelve la información detallada de todos los usuarios que existen en el sistema",
+                "description": "<p>Servicio que devuelve la información detallada de todos los usuarios que existen en el sistema.Si no encuentra nada devuelve falso",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Lista de usuarios del sistema",
                         "examples": {
                             "application/json": [
                                 {
@@ -104,7 +104,7 @@
             "get": {
                 "tags": ["Usuarios"],
                 "summary": "Iniciar sesión",
-                "description": "<p>Servicio que permite que valida el inicio de desion de un usuario mediante su correo y contraseña,</p>Si se tiene éxito devuelve la información del usuario.Si no devuelve false",
+                "description": "<p>Servicio que  que valida el inicio de desion de un usuario mediante su correo y contraseña,</p>Si se tiene éxito devuelve la información del usuario.Si no devuelve false,ya funciona con la encriptacion",
                 "produces": [
                     "application/json"
                 ],
@@ -126,7 +126,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Devuelve los datos del usuario si el inicio de sesion es correcto",
                         "examples": {
                             "application/json": [
                                 {
@@ -141,7 +141,7 @@
                         }
                     },
                     "403": {
-                        "description": "Error"
+                        "description": "Devuelve falso"
                     }
                 }
             }
@@ -150,7 +150,7 @@
             "post": {
                 "tags": ["Usuarios"],
                 "summary": "Creando un nuevo usuario",
-                "description": "<p>Servicio que agrega un nuevo usuario al sistema.El id del domicilio es de tipo autoincremento</p>",
+                "description": "<p>Servicio que agrega un nuevo usuario al sistema,además,encripta la contraseña proporcionada</p>",
                 "operationId": "create",
                 "produces": [
                     "application/json"
@@ -169,10 +169,10 @@
                 "tag": ["Usuarios"],
                 "responses": {
                     "200": {
-                        "description": "respuesta"
+                        "description": "Devuelve los datos del usuario creado"
                     },
                     "403": {
-                        "description": "Prohibido"
+                        "description": "Muestra un mensaje de error(sugerido cambiar a false"
                     }
                 }
             }
@@ -200,8 +200,8 @@
                             "$ref": "#/definitions/Usuario"
                         }
                     },
-                    "403": {
-                        "description": "Prohibido"
+                    "404": {
+                        "description": "Devuelve falso si no encuentra al usuario"
                     }
                 },
                 "parameters": [
@@ -220,7 +220,7 @@
             "post": {
                 "tags": ["Usuarios"],
                 "summary": "Busca un usuario",
-                "description": "<p>Servicio que devuelve la información detallada de un solo usuario mediante su nombre.Si encuentra coincidencias devuelve todos los usuarios que coincidan con el nombre.</p>",
+                "description": "<p>Servicio que devuelve la información detallada los usuarios mediante su nombre</p>",
                 "produces": [
                     "application/json"
                 ],
@@ -238,10 +238,10 @@
                 "tag": ["Usuarios"],
                 "responses": {
                     "200": {
-                        "description": "Respuesta"
+                        "description": "devuelve un arreglo con todos los usuarios con coincidencia en el nombre"
                     },
-                    "403": {
-                        "description": "Prohibido"
+                    "404": {
+                        "description": "falso"
                     }
                 }
             }
@@ -391,6 +391,45 @@
                 ]
             }
         },
+        "/api/usuarios/verPedidos/{id}": {
+            "get": {
+                "tags": ["Usuarios"],
+                "summary": "Usuario en especifico",
+                "description": "<p>Servicio que devuelve la información detallada de los pedidos de un usuario.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "id del usuario",
+                        "type": "number",
+                        "default": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "lista de los pedidos de un usuario",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idPedido": 1,
+                                    "cantidadProducto": 2,
+                                    "subtotal": 5000,
+                                    "idCompra": 1,
+                                    "idProducto": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Pedidos"
+                        }
+                    },
+                    "404": {
+                        "description": "Falso"
+                    }
+                }
+            }
+        },
         "/api/roles/": {
             "get": {
                 "tags": ["Roles"],
@@ -413,6 +452,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 }
             }
@@ -444,6 +486,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 }
             }
@@ -470,6 +515,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 },
                 "parameters": [
@@ -714,7 +762,7 @@
                 "description": "<p>Servicio que devuelve la información detallada de todos los productos que existen en el sistema.",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Lista de productos del sistema",
                         "examples": {
                             "application/json": [
                                 {
@@ -769,6 +817,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 }
             }
@@ -882,10 +933,13 @@
                 "description": "<p>Servicio que devuelve el precio de un producto aplicando un descuento durante un periodo de tiempo.El descuento es una multiplicacion del campo descuento * precio<br>Por defecto todos los productos tienen descuento de 1</p>",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "Se actualiza el campo descuento del producto"
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 },
                 "parameters": [
@@ -940,6 +994,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 },
                 "parameters": [
@@ -954,6 +1011,73 @@
                 ]
             }
         },
+        "/api/productos/buscarNombre": {
+            "post": {
+                "tags": ["Productos"],
+                "summary": "Busca un producto",
+                "description": "<p>Servicio que devuelve la información detallada de los productos mediante su nombre</p>",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Productos",
+                        "in": "body",
+                        "description": "Nombre a buscar",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Buscar"
+                        }
+                    }
+                ],
+                "tag": ["Productos"],
+                "responses": {
+                    "200": {
+                        "description": "Devuelve un arreglo con todos los productos con coincidencia en el nombre"
+                    },
+                    "404": {
+                        "description": "falso"
+                    }
+                }
+            }
+        },
+        "/api/productos/agregarStock/{id}": {
+            "put": {
+                "tags": ["Productos"],
+                "summary": "Agrega stock a un producto",
+                "description": "<p>Servicio que agrega stock a un producto en específico mediante su id.</p>",
+                "responses": {
+                    "200": {
+                        "description": "Se actualiza el campo stock del producto"
+                    },
+                    "403": {
+                        "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "id del producto....",
+                        "type": "number",
+                        "default": "1"
+                    },
+                    {
+                        "name": "Productos",
+                        "in": "body",
+                        "description": "Datos del producto...",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/stockProducto"
+                        }
+                    }
+                ]
+            }
+        },
         "/api/pedidos/": {
             "get": {
                 "tags": ["Pedidos"],
@@ -961,7 +1085,7 @@
                 "description": "<p>Servicio que devuelve la información detallada de todos los pedidos que existen en el sistema.</p>",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Lista de todos los pedidos del sistema",
                         "examples": {
                             "application/json": [
                                 {
@@ -979,6 +1103,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "False"
                     }
                 }
             }
@@ -990,7 +1117,7 @@
                 "description": "<p>Servicio que devuelve la información detallada de un solo pedido mediante su id.</p>",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Informacion de un pedido",
                         "examples": {
                             "application/json": [
                                 {
@@ -1008,6 +1135,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 },
                 "parameters": [
@@ -1029,6 +1159,7 @@
                     "application/json"
                 ],
                 "tag": ["Pedidos"],
+                "description": "Servicio sin usar",
                 "responses": {
                     "200": {
                         "description": "Ok..",
@@ -1140,6 +1271,48 @@
                 }
             }
         },
+        "/api/pedidos/verPedidos/{idCompra}": {
+            "get": {
+                "tags": ["Pedidos"],
+                "summary": "Pedidos de un cliente",
+                "description": "<p>Servicio que devuelve la información detallada de los pedidos asociados a una compra</p>",
+                "parameters": [
+                    {
+                        "name": "idCompra",
+                        "in": "path",
+                        "required": true,
+                        "description": "id de la compra....",
+                        "type": "number",
+                        "default": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos asiciados a una compra",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idPedido": 1,
+                                    "cantidadProducto": 2,
+                                    "subtotal": 5000,
+                                    "idCompra": 1,
+                                    "idProducto": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Pedidos"
+                        }
+                    },
+                    "403": {
+                        "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
+                    }
+                }
+            }
+        },
         "/api/compras/modificarEstadoCompra/{id}": {
             "put": {
                 "summary": "Modificando el estado de una compra",
@@ -1184,12 +1357,12 @@
                 "description": "<p>Servicio que devuelve la información detallada de las compras realizadas en un intervalo de tiempo.Si no se proporciona uno se sevuelven todas las ventas realizadas</p>",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Arreglo con todas las compras realizadas en el intervalo de tiempo",
                         "examples": {
                             "application/json": [
                                 {
                                     "idCompra": 1,
-                                    "fechaCompra": "2020-11-11",
+                                    "fechaCompra": "2024-03-20",
                                     "total": 5000,
                                     "idEstadoCompra": 1,
                                     "idCliente": 1
@@ -1202,6 +1375,9 @@
                     },
                     "403": {
                         "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
                     }
                 },
                 "parameters": [
@@ -1215,6 +1391,48 @@
                         }
                     }
                 ]
+            }
+        },
+        "/api/compras/verCompras/{id}": {
+            "get": {
+                "tags": ["Compras"],
+                "summary": "Compras de un cliente",
+                "description": "<p>Servicio que devuelve la información detallada de las compras de un cliente en específico.</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "id del cliente....",
+                        "type": "number",
+                        "default": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de compras de un cliente",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idCompra": 1,
+                                    "fecha": "2020-11-11",
+                                    "monto": 5000,
+                                    "idEdo": 1,
+                                    "idCliente": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Compras"
+                        }
+                    },
+                    "403": {
+                        "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso si no encuentra al cliente"
+                    }
+                }
             }
         },
         "/api/compras/crearCompra/{id}": {
@@ -2094,11 +2312,48 @@
                 }
             }
         },
+        "/api/carrito/listarCompras/{id}": {
+            "get": {
+                "tags": ["Carrito"],
+                "summary": "Listado de todos los articulos de un cliente en el carrito",
+                "description": "<p>Servicio que devuelve la información  de todos los productos en el carrito de un cliente en especifico.</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "id del cliente....",
+                        "type": "number",
+                        "default": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de productos en el carrito de un cliente",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idProducto": 1,
+                                    "precio por unidad": 5,
+                                    "cantidad": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Carrito"
+                        }
+                    },
+                    "403": {
+                        "description": "Prohibido"
+                    }
+                }
+            }
+        },
         "/api/carrito/limpiarCarrito/{id}": {
             "delete": {
                 "tags": ["Carrito"],
                 "summary": "Conjunto de productos de un cliente en especifico",
-                "description": "Servicio que elimina un carrito de cliente del sistema.",
+                "description": "Servicio que elimina un carrito de cliente del sistema.Ademas agrega de nuevo al inventario los productos que este tuviese",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -2341,7 +2596,7 @@
         "Buscar": {
             "type": "object",
             "properties": {
-                "valor": {
+                "nombre": {
                     "type": "Text",
                     "description": "Valor a buscar"
                 }
@@ -2616,18 +2871,28 @@
                 }
             }
         },
+        "stockProducto": {
+            "type": "object",
+            "properties": {
+                "stock": {
+                    "type": "number",
+                    "descripcion": "Cantidad de productos en existencia",
+                    "default": 10
+                }
+            }
+        },
         "Periodo": {
             "type": "object",
             "properties": {
                 "fechaInicio": {
                     "type": "date",
                     "descripcion": "Fecha de inicio ",
-                    "default": "2023-12-01"
+                    "default": "2024-01-01"
                 },
                 "fechaFin": {
                     "type": "date",
                     "descripcion": "Fecha de fin ",
-                    "default": "2023-12-24"
+                    "default": "2024-12-31"
                 }
             }
         },
@@ -2637,35 +2902,10 @@
                 "$ref": "#/definitions/Producto"
             }
         },
-        "Pedido": {
-            "type": "object",
-            "properties": {
-                "idPedido": {
-                    "type": "number",
-                    "descripcion": "Id del pedido"
-                },
-                "cantidadProducto": {
-                    "type": "number",
-                    "descripcion": "Cantidad de productos en el pedido"
-                },
-                "subtotal": {
-                    "type": "number",
-                    "descripcion": "Subtotal del pedido"
-                },
-                "idCompra": {
-                    "type": "number",
-                    "descripcion": "Id de la compra"
-                },
-                "idProducto": {
-                    "type": "number",
-                    "descripcion": "Id del producto en el pedido"
-                }
-            }
-        },
         "Pedidos": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/Pedido"
+                "$ref": "#/definitions/pedido"
             }
         },
         "nuevoPedido": {
@@ -2680,6 +2920,31 @@
                     "type": "number",
                     "descripcion": "Subtotal del pedido",
                     "default": 0
+                },
+                "idCompra": {
+                    "type": "number",
+                    "descripcion": "Id de la compra"
+                },
+                "idProducto": {
+                    "type": "number",
+                    "descripcion": "Id del producto en el pedido"
+                }
+            }
+        },
+        "pedido": {
+            "type": "object",
+            "properties": {
+                "idPedido": {
+                    "type": "number",
+                    "descripcion": "Id del pedido"
+                },
+                "cantidadProducto": {
+                    "type": "number",
+                    "descripcion": "Cantidad de productos en el pedido"
+                },
+                "subtotal": {
+                    "type": "number",
+                    "descripcion": "Subtotal del pedido"
                 },
                 "idCompra": {
                     "type": "number",
