@@ -14,6 +14,7 @@ class DomicilioRoutes{
         this.router.delete('/eliminar/:id',domicilioController.delete);
         this.router.get('/', domicilioController.list );
         this.router.get('/:id', domicilioController.listOne );
+        this.router.get('/direccion/:id', domicilioController.listDom );
         }
 }
 const domicilioRoutes= new DomicilioRoutes();
