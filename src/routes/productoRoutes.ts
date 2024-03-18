@@ -18,8 +18,9 @@ class ProductoRoutes{
         this.router.get('/filtrarProductos/:id', productoController.filtrarProductos );
         this.router.post('/buscarNombre', productoController.buscarporNombre );
         this.router.put ('/agregarStock/:id', productoController.agregarStock );
+        this.router.get('/buscarporCategoria/:id', productoController.buscarbyCategoria);
 
-    }
+}
 }
 const productoRoutes= new ProductoRoutes();
 export default productoRoutes.router;

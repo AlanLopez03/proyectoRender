@@ -123,6 +123,17 @@ class ProductoController
             console.log(err);
         }
     }
+    public async buscarbyCategoria(req: Request, res: Response): Promise <void>{
+        const categoria = req.params.id;
+        //console.log(categoria);
+        try{
+            const consulta = await pool.query('SELECT producto.idProducto, producto.nombre, producto.descripcion,producto.stock,producto.precio,producto.descuento,DATE(inicio_descuento),Date(fin_descuento),producto.idMaterial,producto.idCategoria,producto.idMarca FROM producto where producto.idCategoria = ?', [categoria]);
+            res.json(consulta);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 
 }
 
