@@ -121,5 +121,18 @@ class ProductoController {
             }
         });
     }
+    buscarbyCategoria(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const categoria = req.params.id;
+            //console.log(categoria);
+            try {
+                const consulta = yield database_1.default.query('SELECT producto.idProducto, producto.nombre, producto.descripcion,producto.stock,producto.precio,producto.descuento,DATE(inicio_descuento),Date(fin_descuento),producto.idMaterial,producto.idCategoria,producto.idMarca FROM producto where producto.idCategoria = ?', [categoria]);
+                res.json(consulta);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
+    }
 }
 exports.productoController = new ProductoController();
