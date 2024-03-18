@@ -80,6 +80,8 @@ class ProductoController
                 res.json(respuesta);
                 return ;
             }
+            res.json(false);
+            
         }   
         catch(err){
             console.log(err);

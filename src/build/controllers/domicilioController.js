@@ -32,6 +32,17 @@ class DomicilioController {
             res.status(404).json({ 'mensaje': 'Domicilio no encontrado' });
         });
     }
+    listDom(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const respuesta = yield database_1.default.query('SELECT * FROM domicilio WHERE idDomicilio = ?', [id]);
+            if (respuesta.length > 0) {
+                res.json(respuesta[0]);
+                return;
+            }
+            res.status(404).json({ 'mensaje': 'Domicilio no encontrado' });
+        });
+    }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const resp = yield database_1.default.query("INSERT INTO domicilio set ?", [req.body]);
