@@ -3,6 +3,20 @@ import pool from '../database';
 
 class ProductoController
 {
+    public async verOfertas(req: Request, res: Response): Promise<void>{
+        try{
+        const respuesta = await pool.query('SELECT * FROM producto WHERE descuento<1');
+        if (respuesta.length>0)
+        {
+            res.json(respuesta);
+            return;
+        }
+        res.json( false  );
+        }
+        catch (err){
+            res.json(err);
+        }
+    }
     public async list(req: Request, res: Response ): Promise<void>
     {
         try{

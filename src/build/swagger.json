@@ -790,6 +790,44 @@
                 }
             }
         },
+        "/api/productos/verOfertas": {
+            "get": {
+                "tags": ["Productos"],
+                "summary": "Productos en oferta",
+                "description": "<p>Servicio que devuelve la información detallada de los productos que tienen descuento.</p>",
+                "responses": {
+                    "200": {
+                        "description": "Lista de todos los productos con descuento",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "idProducto": 1,
+                                    "nombre": "Anillo",
+                                    "descripcion": "Anillo de oro #27",
+                                    "stock": 25,
+                                    "precio": 24,
+                                    "descuento": 1,
+                                    "inicio_descuento": "2024-11-11",
+                                    "fin_descuento": "2024-11-11",
+                                    "idMaterial": 1,
+                                    "idCategoria": 1,
+                                    "idMarca": 1
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/Producto"
+                        }
+                    },
+                    "403": {
+                        "description": "Prohibido"
+                    },
+                    "404": {
+                        "description": "Falso"
+                    }
+                }
+            }
+        },
         "/api/productos/crearProducto": {
             "post": {
                 "tags": ["Productos"],

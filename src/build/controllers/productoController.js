@@ -15,6 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productoController = void 0;
 const database_1 = __importDefault(require("../database"));
 class ProductoController {
+    verOfertas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const respuesta = yield database_1.default.query('SELECT * FROM producto WHERE descuento<1');
+                if (respuesta.length > 0) {
+                    res.json(respuesta);
+                    return;
+                }
+                res.json(false);
+            }
+            catch (err) {
+                res.json(err);
+            }
+        });
+    }
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
